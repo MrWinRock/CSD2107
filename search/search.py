@@ -84,9 +84,9 @@ def depthFirstSearch(problem):
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
     """
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    # print("Start:", problem.getStartState())
+    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
     "*** YOUR CODE HERE ***"
 
@@ -139,7 +139,26 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Use a PriorityQueue, so the cost of actions is calculated with a provided heuristic
+    fringe = util.PriorityQueue()
+    # Make an empty list of explored nodes
+    visited = []
+    # Make an empty list of actions
+    actionList = []
+    # Place the starting point in the priority queue
+    fringe.push((problem.getStartState(), actionList), problem)
+    while fringe:
+        node, actions = fringe.pop()
+        if not node in visited:
+            visited.append(node)
+            if problem.isGoalState(node):
+                return actions
+            for successor in problem.getSuccessors(node):
+                coordinate, direction, cost = successor
+                nextActions = actions + [direction]
+                nextCost = problem.getCostOfActions(nextActions)
+                fringe.push((coordinate, nextActions), nextCost)
+    return []
 
 
 def nullHeuristic(state, problem=None):
@@ -153,7 +172,65 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Use a priority queue, so the cost of actions is calculated with a provided heuristic
+    fringe = util.PriorityQueue()
+    # Make an empty list of explored nodes
+    visited = []
+    # Make an empty list of actions
+    actionList = []
+    # Place the starting point in the priority queue
+    fringe.push((problem.getStartState(), actionList),
+                heuristic(problem.getStartState(), problem))
+    while fringe:
+        node, actions = fringe.pop()
+        if not node in visited:
+            visited.append(node)
+            if problem.isGoalState(node):
+                return actions
+            for successor in problem.getSuccessors(node):
+                coordinate, direction, cost = successor
+                nextActions = actions + [direction]
+                nextCost = problem.getCostOfActions(nextActions) + \
+                    heuristic(coordinate, problem)
+                fringe.push((coordinate, nextActions), nextCost)
+    return []
+
+
+def iterativeDeepeningAStar(problem, heuristic=nullHeuristic):
+    """Iterative Deepening A* Search"""
+
+    def search(node, cost, threshold):
+        f = cost + heuristic(node, problem)
+        if f > threshold:
+            return f
+        if problem.isGoalState(node):
+            return FOUND
+        min_threshold = float("inf")
+        for successor, action, step_cost in problem.getSuccessors(node):
+            if successor not in visited:
+                visited.add(successor)
+                result = search(successor, cost + step_cost, threshold)
+                if result == FOUND:
+                    actions.append(action)
+                    return FOUND
+                if result < min_threshold:
+                    min_threshold = result
+                visited.remove(successor)
+        return min_threshold
+
+    FOUND = object()  # Unique marker for found goal
+    start = problem.getStartState()
+    threshold = heuristic(start, problem)
+    while True:
+        visited = set([start])
+        actions = []
+        t = search(start, 0, threshold)
+        if t == FOUND:
+            actions.reverse()
+            return actions
+        if t == float("inf"):
+            return []
+        threshold = t
 
 
 # Abbreviations
@@ -161,3 +238,4 @@ bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+ida = iterativeDeepeningAStar
