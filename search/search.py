@@ -201,6 +201,10 @@ def iterativeDeepeningAStar(problem, heuristic=nullHeuristic):
 
     def search(node, cost, threshold):
         f = cost + heuristic(node, problem)
+        print("Heuristic = ", f, "Threshold = ", threshold)
+        # print("Start:", problem.getStartState())
+        # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+        print("Start's successors:", problem.getSuccessors(problem.getAction()))
         if f > threshold:
             return f
         if problem.isGoalState(node):
