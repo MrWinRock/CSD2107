@@ -204,7 +204,6 @@ def iterativeDeepeningAStar(problem, heuristic=nullHeuristic):
         print("Heuristic = ", f, "Threshold = ", threshold)
         # print("Start:", problem.getStartState())
         # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-        print("Start's successors:", problem.getSuccessors(problem.getAction()))
         if f > threshold:
             return f
         if problem.isGoalState(node):
@@ -237,9 +236,123 @@ def iterativeDeepeningAStar(problem, heuristic=nullHeuristic):
         threshold = t
 
 
+def depthLimitSearchNotComplete(problem, depthLimit=67):
+    """Depth-Limit Search Not Complete"""
+
+    """
+    For mediumMaze.
+    The Least cost to make the puzzle complete is 68.
+    Depth-Limit is 67, there is no solution to make the puzzle complete
+    with limit of 67.
+    """
+    def recursiveDLS(node, depth, actions, visited):
+        if problem.isGoalState(node):
+            return actions  # Return the result of actions when the goal is found
+
+        if depth == 0:
+            return "cutoff"
+
+        cutoffOccurred = False
+        for nextNode, action, cost in problem.getSuccessors(node):
+            if nextNode not in visited:
+                newAction = actions + [action]
+                visited.add(nextNode)
+                result = recursiveDLS(nextNode, depth - 1, newAction, visited)
+                visited.remove(nextNode)
+
+                if result == "cutoff":
+                    cutoffOccurred = True
+                elif result:
+                    return result
+
+        return "cutoff" if cutoffOccurred else None
+
+    startingNode = problem.getStartState()
+    visited = set([startingNode])
+    result = recursiveDLS(startingNode, depthLimit, [], visited)
+
+    return result if result != "cutoff" else []
+
+
+def depthLimitSearch(problem, depthLimit=68):
+    """Depth-Limit Search"""
+
+    """
+    For mediumMaze
+    Best case is the limit of 68 which is the least cost of make
+    puzzle complete with depth-limit search.
+    """
+    def recursiveDLS(node, depth, actions, visited):
+        if problem.isGoalState(node):
+            return actions  # Return the result of actions when the goal is found
+
+        if depth == 0:
+            return "cutoff"
+
+        cutoffOccurred = False
+        for nextNode, action, cost in problem.getSuccessors(node):
+            if nextNode not in visited:
+                newAction = actions + [action]
+                visited.add(nextNode)
+                result = recursiveDLS(nextNode, depth - 1, newAction, visited)
+                visited.remove(nextNode)
+
+                if result == "cutoff":
+                    cutoffOccurred = True
+                elif result:
+                    return result
+
+        return "cutoff" if cutoffOccurred else None
+
+    startingNode = problem.getStartState()
+    visited = set([startingNode])
+    result = recursiveDLS(startingNode, depthLimit, [], visited)
+
+    return result if result != "cutoff" else []
+
+
+
+def iterativeDeepeningSearch(problem):
+    def depthLimitedSearch(node, depthLimit, actions, visited):
+        if problem.isGoalState(node):
+            return actions
+
+        if depthLimit == 0:
+            return "cutoff"
+
+        cutoffOccurred = False
+        for nextNode, action, cost in problem.getSuccessors(node):
+            if nextNode not in visited:
+                newAction = actions + [action]
+                visited.add(nextNode)
+                result = depthLimitedSearch(
+                    nextNode, depthLimit - 1, newAction, visited)
+                visited.remove(nextNode)
+
+                if result == "cutoff":
+                    cutoffOccurred = True
+                elif result:
+                    return result
+
+        return "cutoff" if cutoffOccurred else None
+
+    startingNode = problem.getStartState()
+
+    for depthLimit in range(1, 10000):  # Use a large integer instead of float('inf')
+        visited = set([startingNode])
+        result = depthLimitedSearch(startingNode, depthLimit, [], visited)
+        if result and result != "cutoff":
+            return result
+
+
+
+
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
-ida = iterativeDeepeningAStar
+idastar = iterativeDeepeningAStar
+dlsn = depthLimitSearchNotComplete
+dls = depthLimitSearch
+ids = iterativeDeepeningSearch
