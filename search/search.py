@@ -99,6 +99,7 @@ def depthFirstSearch(problem):
     myStack.push((startingNode, []))
 
     while not myStack.isEmpty():
+        print(problem.getSuccessors(problem.getStartState()))
         currentNode, actions = myStack.pop()
         if currentNode not in visitedNodes:
             visitedNodes.add(currentNode)
@@ -236,7 +237,7 @@ def iterativeDeepeningAStar(problem, heuristic=nullHeuristic):
         threshold = t
 
 
-def depthLimitSearchNotComplete(problem, depthLimit=67):
+def depthLimitSearchNotComplete(problem, depthLimit=7):
     """Depth-Limit Search Not Complete"""
 
     """
@@ -246,6 +247,7 @@ def depthLimitSearchNotComplete(problem, depthLimit=67):
     with limit of 67.
     """
     def recursiveDLS(node, depth, actions, visited):
+        print(problem.getSuccessors(node))
         if problem.isGoalState(node):
             return actions  # Return the result of actions when the goal is found
 
@@ -267,6 +269,7 @@ def depthLimitSearchNotComplete(problem, depthLimit=67):
 
         return "cutoff" if cutoffOccurred else None
 
+    print(problem.getStartState())
     startingNode = problem.getStartState()
     visited = set([startingNode])
     result = recursiveDLS(startingNode, depthLimit, [], visited)
@@ -274,7 +277,7 @@ def depthLimitSearchNotComplete(problem, depthLimit=67):
     return result if result != "cutoff" else []
 
 
-def depthLimitSearch(problem, depthLimit=68):
+def depthLimitSearch(problem, depthLimit=8):
     """Depth-Limit Search"""
 
     """
@@ -283,9 +286,9 @@ def depthLimitSearch(problem, depthLimit=68):
     puzzle complete with depth-limit search.
     """
     def recursiveDLS(node, depth, actions, visited):
+        print(problem.getSuccessors(node))
         if problem.isGoalState(node):
             return actions  # Return the result of actions when the goal is found
-
         if depth == 0:
             return "cutoff"
 
@@ -293,10 +296,16 @@ def depthLimitSearch(problem, depthLimit=68):
         for nextNode, action, cost in problem.getSuccessors(node):
             if nextNode not in visited:
                 newAction = actions + [action]
+                print("0.0: ", visited) #
                 visited.add(nextNode)
+                print("0: ", visited) #
+                print("NextNode: ", nextNode) #
                 result = recursiveDLS(nextNode, depth - 1, newAction, visited)
+                print("1: ", visited) # 
                 visited.remove(nextNode)
+                print("2: ", visited) # 
 
+                print("Result: ", result) #
                 if result == "cutoff":
                     cutoffOccurred = True
                 elif result:
@@ -309,7 +318,6 @@ def depthLimitSearch(problem, depthLimit=68):
     result = recursiveDLS(startingNode, depthLimit, [], visited)
 
     return result if result != "cutoff" else []
-
 
 
 def iterativeDeepeningSearch(problem):
@@ -319,14 +327,17 @@ def iterativeDeepeningSearch(problem):
 
         if depthLimit == 0:
             return "cutoff"
-
+        print("Successor: ", problem.getSuccessors(node)) #
         cutoffOccurred = False
         for nextNode, action, cost in problem.getSuccessors(node):
             if nextNode not in visited:
+                print("Node expanded: ", node) #
                 newAction = actions + [action]
                 visited.add(nextNode)
+                print("Next node: ", nextNode) #
                 result = depthLimitedSearch(
                     nextNode, depthLimit - 1, newAction, visited)
+                print("Visited: ", visited) #
                 visited.remove(nextNode)
 
                 if result == "cutoff":
@@ -339,12 +350,11 @@ def iterativeDeepeningSearch(problem):
     startingNode = problem.getStartState()
 
     for depthLimit in range(1, 10000):  # Use a large integer instead of float('inf')
-        visited = set([startingNode])
+        visited = set([startingNode]) 
+        print("\n-----------------------\nDepth Limit: ", depthLimit) #
         result = depthLimitedSearch(startingNode, depthLimit, [], visited)
         if result and result != "cutoff":
             return result
-
-
 
 
 # Abbreviations
