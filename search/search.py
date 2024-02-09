@@ -287,7 +287,7 @@ def depthLimitSearch(problem, depthLimit=8):
     puzzle complete with depth-limit search.
     """
     def recursiveDLS(node, depth, actions, visited):
-        print(problem.getSuccessors(node))
+        print("/nNode: ", problem.getSuccessors(node))
         if problem.isGoalState(node):
             return actions  # Return the result of actions when the goal is found
         if depth == 0:
