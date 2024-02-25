@@ -16,7 +16,7 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
-
+import math
 import util
 
 
@@ -99,15 +99,17 @@ def depthFirstSearch(problem):
     myStack.push((startingNode, []))
 
     while not myStack.isEmpty():
-        print(problem.getSuccessors(problem.getStartState()))
         currentNode, actions = myStack.pop()
+        print("\n-------------------------\nCurrent node: ",currentNode)
+        print("Successors: ",problem.getSuccessors(currentNode))
         if currentNode not in visitedNodes:
             visitedNodes.add(currentNode)
-
+            print("Visited Node: ", visitedNodes)
             if problem.isGoalState(currentNode):
                 return actions
 
             for nextNode, action, cost in problem.getSuccessors(currentNode):
+                print("Next Node: ", nextNode)
                 newAction = actions + [action]
                 myStack.push((nextNode, newAction))
 
@@ -356,6 +358,57 @@ def iterativeDeepeningSearch(problem):
         if result and result != "cutoff":
             return result
 
+def minimax(node, depth, maximizing_player, evaluation_function):
+    if depth == 0 or node.isGoalState():
+        return evaluation_function(node), None
+
+    if maximizing_player:
+        max_eval = -math.inf
+        best_move = None
+        for move in node.getSuccessors():
+            eval, _ = minimax(move[0], depth - 1, False, evaluation_function)
+            if eval > max_eval:
+                max_eval = eval
+                best_move = move[1]
+        return max_eval, best_move
+    else:
+        min_eval = math.inf
+        best_move = None
+        for move in node.getSuccessors():
+            eval, _ = minimax(move[0], depth - 1, True, evaluation_function)
+            if eval < min_eval:
+                min_eval = eval
+                best_move = move[1]
+        return min_eval, best_move
+
+def alpha_beta(node, depth, alpha, beta, maximizing_player, evaluation_function):
+    if depth == 0 or node.isGoalState():
+        return evaluation_function(node), None
+
+    if maximizing_player:
+        max_eval = -math.inf
+        best_move = None
+        for move in node.getSuccessors():
+            eval, _ = alpha_beta(move[0], depth - 1, alpha, beta, False, evaluation_function)
+            if eval > max_eval:
+                max_eval = eval
+                best_move = move[1]
+            alpha = max(alpha, eval)
+            if alpha >= beta:
+                break
+        return max_eval, best_move
+    else:
+        min_eval = math.inf
+        best_move = None
+        for move in node.getSuccessors():
+            eval, _ = alpha_beta(move[0], depth - 1, alpha, beta, True, evaluation_function)
+            if eval < min_eval:
+                min_eval = eval
+                best_move = move[1]
+            beta = min(beta, eval)
+            if alpha >= beta:
+                break
+        return min_eval, best_move
 
 # Abbreviations
 bfs = breadthFirstSearch
@@ -366,3 +419,5 @@ idastar = iterativeDeepeningAStar
 dlsn = depthLimitSearchNotComplete
 dls = depthLimitSearch
 ids = iterativeDeepeningSearch
+mini = minimax
+abp = alpha_beta
