@@ -100,8 +100,13 @@ def depthFirstSearch(problem):
 
     while not myStack.isEmpty():
         currentNode, actions = myStack.pop()
+<<<<<<< HEAD
         print("\n-------------------------\nCurrent node: ",currentNode)
         print("Successors: ",problem.getSuccessors(currentNode))
+=======
+        print("Node: ", currentNode)
+        print("Successor: ", problem.getSuccessors(currentNode))
+>>>>>>> d45501bb8dc2b42f001134869042cef9684ffbe1
         if currentNode not in visitedNodes:
             visitedNodes.add(currentNode)
             print("Visited Node: ", visitedNodes)
@@ -288,7 +293,7 @@ def depthLimitSearch(problem, depthLimit=8):
     puzzle complete with depth-limit search.
     """
     def recursiveDLS(node, depth, actions, visited):
-        print(problem.getSuccessors(node))
+        print("/nNode: ", problem.getSuccessors(node))
         if problem.isGoalState(node):
             return actions  # Return the result of actions when the goal is found
         if depth == 0:
@@ -298,14 +303,14 @@ def depthLimitSearch(problem, depthLimit=8):
         for nextNode, action, cost in problem.getSuccessors(node):
             if nextNode not in visited:
                 newAction = actions + [action]
-                print("0.0: ", visited) #
+                print("Visited1 : ", visited) #
                 visited.add(nextNode)
-                print("0: ", visited) #
+                print("Visited 2: ", visited) #
                 print("NextNode: ", nextNode) #
                 result = recursiveDLS(nextNode, depth - 1, newAction, visited)
-                print("1: ", visited) # 
+                print("Visited 3: ", visited) # 
                 visited.remove(nextNode)
-                print("2: ", visited) # 
+                print("Visited 4: ", visited) # 
 
                 print("Result: ", result) #
                 if result == "cutoff":
