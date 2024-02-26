@@ -57,12 +57,18 @@ def alpha_beta(node, depth, alpha, beta, maximizing_player):
                 break
         return min_eval, best_move
 
-# Example usage:
 # Create a tree
-root = Node(float('inf'))
-root.children = [Node(float('-inf')), Node(float('-inf'))]
-root.children[0].children = [Node(7), Node(8)]
-root.children[1].children = [Node(-4), Node(5)]
+root = Node(math.inf)
+""
+root.children = [Node(-math.inf), Node(-math.inf)]
+""
+root.children[0].children = [Node(math.inf), Node(math.inf)]
+root.children[1].children = [Node(math.inf), Node(math.inf)]
+""
+root.children[0].children[0].children = [Node(-1), Node(3)]
+root.children[0].children[1].children = [Node(5), Node(1)]
+root.children[1].children[0].children = [Node(-6), Node(-4)]
+root.children[1].children[1].children = [Node(0), Node(9)]
 
 # Call minimax
 score, best_move = minimax(root, 3, True)
