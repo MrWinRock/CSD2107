@@ -100,17 +100,13 @@ def depthFirstSearch(problem):
 
     while not myStack.isEmpty():
         currentNode, actions = myStack.pop()
-<<<<<<< HEAD
         print("\n-------------------------\nCurrent node: ",currentNode)
         print("Successors: ",problem.getSuccessors(currentNode))
-=======
-        print("Node: ", currentNode)
-        print("Successor: ", problem.getSuccessors(currentNode))
->>>>>>> d45501bb8dc2b42f001134869042cef9684ffbe1
         if currentNode not in visitedNodes:
             visitedNodes.add(currentNode)
             print("Visited Node: ", visitedNodes)
             if problem.isGoalState(currentNode):
+                print("\n-----------\nPath: ", actions, "\n-----------")
                 return actions
 
             for nextNode, action, cost in problem.getSuccessors(currentNode):
@@ -356,7 +352,7 @@ def iterativeDeepeningSearch(problem):
 
     startingNode = problem.getStartState()
 
-    for depthLimit in range(1, 10000):  # Use a large integer instead of float('inf')
+    for depthLimit in range(1, 10):  # Use a large integer instead of float('inf')
         visited = set([startingNode]) 
         print("\n-----------------------\nDepth Limit: ", depthLimit) #
         result = depthLimitedSearch(startingNode, depthLimit, [], visited)
