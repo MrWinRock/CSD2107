@@ -68,8 +68,8 @@ root.children[1].children[1].children = [Node(0), Node(9)]
 
 
 # Call minimax
-# score = minimax(root, 3, True)
-# print("Minimax Score:", score)
+score = minimax(root, 3, True)
+print("Minimax Score:", score)
 
 # Call alpha-beta pruning
 score = alpha_beta(root, 3, -math.inf, math.inf, True)
