@@ -15,6 +15,7 @@ def minimax(node, depth, maximizing_player):
         max_eval = -math.inf
         for child in node.children:
             eval = minimax(child, depth - 1, False)
+            print(f'At Depth: {depth}\nAlpha at {eval}\n')
             if eval > max_eval:
                 max_eval = eval
         return max_eval
@@ -22,6 +23,7 @@ def minimax(node, depth, maximizing_player):
         min_eval = math.inf
         for child in node.children:
             eval = minimax(child, depth - 1, True)
+            print(f'At Depth: {depth}\nAlpha at {eval}\n')
             if eval < min_eval:
                 min_eval = eval
         return min_eval
