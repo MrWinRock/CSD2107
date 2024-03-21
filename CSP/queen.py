@@ -33,5 +33,6 @@ def solve_n_queens(N):
         print(" ".join(str(cell) for cell in row))
     return True
 
+
 N = 8
 solve_n_queens(N)
